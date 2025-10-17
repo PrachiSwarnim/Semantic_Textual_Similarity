@@ -17,7 +17,7 @@ def preprocess_text(text):
 # -------------------------------
 # Load the model
 # -------------------------------
-model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 # -------------------------------
 # Request body schema

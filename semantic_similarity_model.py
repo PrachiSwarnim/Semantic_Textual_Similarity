@@ -18,7 +18,7 @@ def preprocess_text(text):
 data = pd.read_csv("DataNeuron_Text_Similarity.csv")
 
 # Load semantic similarity model (MPNet)
-model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 # -------------------------------
 # Compute similarity function
