@@ -1,6 +1,6 @@
-numpy==1.26.4
-torch==2.1.0
+fastapi==0.115.0
+uvicorn==0.30.6
 sentence-transformers==2.2.2
-fastapi
-uvicorn
+torch==2.1.0
+numpy<2
 regex
