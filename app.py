@@ -18,8 +18,8 @@ def preprocess_text(text: str) -> str:
     text = re.sub(r'[^\w\s]', '', text)
     return text.strip()
 
-# Load model once at startup
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+# Load model
+model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
 
 # Compute similarity
 def get_similarity(text1: str, text2: str) -> float:
@@ -39,4 +39,4 @@ def similarity(payload: TextPair):
 # Root endpoint for testing
 @app.get("/")
 def home():
-    return {"message": "Text Similarity API is running 🚀"}
+    return {"message": "Text Similarity API is running"}

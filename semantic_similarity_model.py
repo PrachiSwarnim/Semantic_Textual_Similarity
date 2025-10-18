@@ -1,37 +1,32 @@
+#Import libraries
 from sentence_transformers import SentenceTransformer, util
 import pandas as pd
 import re
-def preprocess_text(text):
-    text = str(text).lower()                   # lowercase
-    text = re.sub(r'\s+', ' ', text)           # collapse multiple spaces & line breaks
-    text = re.sub(r'[^\w\s]', '', text)        # remove punctuation
-    text = text.strip()                         # trim spaces
-    return text
 
+# Basic text cleanup
+def preprocess_text(text):
+    text = str(text).lower()
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'[^\w\s]', '', text)
+    return text.strip()
+
+# Load dataset
 data = pd.read_csv("DataNeuron_Text_Similarity.csv")
 
+# Load transformer model
 model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 
+# Compute cosine similarity between two texts
 def get_similarity(text1, text2):
-    clean_text1 = preprocess_text(text1)
-    clean_text2 = preprocess_text(text2)
+    emb1 = model.encode(preprocess_text(text1), convert_to_tensor=True)
+    emb2 = model.encode(preprocess_text(text2), convert_to_tensor=True)
+    score = util.cos_sim(emb1, emb2).item()
+    return round((score + 1) / 2, 3)  # Normalize to [0,1]
 
-    emb1 = model.encode(clean_text1, convert_to_tensor=True)
-    emb2 = model.encode(clean_text2, convert_to_tensor=True)
+# Generate similarity scores for all pairs
+data['similarity_score'] = [
+    get_similarity(row['text1'], row['text2']) for _, row in data.iterrows()
+]
 
-    sim_score = util.cos_sim(emb1, emb2).item()
-    
-    sim_score = (sim_score + 1) / 2
-    return round(sim_score, 3)
-
-similarity_scores = []
-
-for idx, row in data.iterrows():
-    text1 = row['text1']
-    text2 = row['text2']
-    score = get_similarity(text1, text2)
-    similarity_scores.append(score)
-
-data['similarity_score'] = similarity_scores
-
+# Save results
 data.to_csv("results.csv", index=False)
